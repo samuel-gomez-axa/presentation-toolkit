@@ -1,5 +1,7 @@
 //const TerserPlugin = require('terser-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 /* eslint-disable */
 
 var path = require('path');
@@ -12,7 +14,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/dist/'
+    publicPath: '/'
   },
 
   plugins: [
@@ -20,7 +22,14 @@ module.exports = {
       'process.env': {
         NODE_ENV: JSON.stringify('production')
       }
-    })
+    }),
+    new HtmlWebpackPlugin({
+      template: 'index.html',
+      dist: '/'
+    }),
+    new CopyWebpackPlugin([
+      { from: './index.html', to: path.join(__dirname, 'dist/index.html') }
+    ])
   ],
 
   module: {
@@ -76,7 +85,8 @@ module.exports = {
               limit: 8192
             }
           }
-        ]
+        ],
+        include: path.join(__dirname, 'assets')
       },
       {
         test: /\.svg$/,
